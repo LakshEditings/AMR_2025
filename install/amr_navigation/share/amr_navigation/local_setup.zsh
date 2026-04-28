@@ -1,0 +1,1 @@
+/home/user/AMR/build/amr_navigation/ament_cmake_environment_hooks/local_setup.zsh

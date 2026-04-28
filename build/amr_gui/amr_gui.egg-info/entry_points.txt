@@ -1,0 +1,3 @@
+[console_scripts]
+amr_gui_node = amr_gui.amr_gui_node:main
+

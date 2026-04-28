@@ -1,0 +1,42 @@
+[0.019s] Invoking command in '/home/user/AMR/build/amr_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/user/turtle_flower_ws/install/turtle_flower_control:/opt/ros/humble /usr/bin/cmake /home/user/AMR/src/amr_description -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/user/AMR/install/amr_description
+[0.570s] -- The C compiler identification is GNU 11.4.0
+[0.970s] -- The CXX compiler identification is GNU 11.4.0
+[0.995s] -- Detecting C compiler ABI info
+[1.102s] -- Detecting C compiler ABI info - done
+[1.110s] -- Check for working C compiler: /usr/bin/cc - skipped
+[1.112s] -- Detecting C compile features
+[1.113s] -- Detecting C compile features - done
+[1.118s] -- Detecting CXX compiler ABI info
+[1.192s] -- Detecting CXX compiler ABI info - done
+[1.197s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[1.197s] -- Detecting CXX compile features
+[1.197s] -- Detecting CXX compile features - done
+[1.206s] -- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+[1.337s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter 
+[1.394s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[1.479s] -- Configuring done
+[1.482s] -- Generating done
+[1.482s] -- Build files have been written to: /home/user/AMR/build/amr_description
+[1.487s] Invoked command in '/home/user/AMR/build/amr_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/user/turtle_flower_ws/install/turtle_flower_control:/opt/ros/humble /usr/bin/cmake /home/user/AMR/src/amr_description -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/user/AMR/install/amr_description
+[1.488s] Invoking command in '/home/user/AMR/build/amr_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/user/turtle_flower_ws/install/turtle_flower_control:/opt/ros/humble /usr/bin/cmake --build /home/user/AMR/build/amr_description -- -j12 -l12
+[1.525s] Invoked command in '/home/user/AMR/build/amr_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/user/turtle_flower_ws/install/turtle_flower_control:/opt/ros/humble /usr/bin/cmake --build /home/user/AMR/build/amr_description -- -j12 -l12
+[1.526s] Invoking command in '/home/user/AMR/build/amr_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/user/turtle_flower_ws/install/turtle_flower_control:/opt/ros/humble /usr/bin/cmake --install /home/user/AMR/build/amr_description
+[1.532s] -- Install configuration: ""
+[1.533s] -- Execute custom install script
+[1.533s] -- Symlinking: /home/user/AMR/install/amr_description/share/amr_description//urdf/amr_robot.urdf.xacro
+[1.540s] -- Symlinking: /home/user/AMR/install/amr_description/share/ament_index/resource_index/package_run_dependencies/amr_description
+[1.547s] -- Symlinking: /home/user/AMR/install/amr_description/share/ament_index/resource_index/parent_prefix_path/amr_description
+[1.553s] -- Symlinking: /home/user/AMR/install/amr_description/share/amr_description/environment/ament_prefix_path.sh
+[1.560s] -- Symlinking: /home/user/AMR/install/amr_description/share/amr_description/environment/ament_prefix_path.dsv
+[1.566s] -- Symlinking: /home/user/AMR/install/amr_description/share/amr_description/environment/path.sh
+[1.573s] -- Symlinking: /home/user/AMR/install/amr_description/share/amr_description/environment/path.dsv
+[1.580s] -- Symlinking: /home/user/AMR/install/amr_description/share/amr_description/local_setup.bash
+[1.585s] -- Symlinking: /home/user/AMR/install/amr_description/share/amr_description/local_setup.sh
+[1.591s] -- Symlinking: /home/user/AMR/install/amr_description/share/amr_description/local_setup.zsh
+[1.597s] -- Symlinking: /home/user/AMR/install/amr_description/share/amr_description/local_setup.dsv
+[1.606s] -- Symlinking: /home/user/AMR/install/amr_description/share/amr_description/package.dsv
+[1.612s] -- Symlinking: /home/user/AMR/install/amr_description/share/ament_index/resource_index/packages/amr_description
+[1.618s] -- Symlinking: /home/user/AMR/install/amr_description/share/amr_description/cmake/amr_descriptionConfig.cmake
+[1.624s] -- Symlinking: /home/user/AMR/install/amr_description/share/amr_description/cmake/amr_descriptionConfig-version.cmake
+[1.630s] -- Symlinking: /home/user/AMR/install/amr_description/share/amr_description/package.xml
+[1.637s] Invoked command in '/home/user/AMR/build/amr_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/user/turtle_flower_ws/install/turtle_flower_control:/opt/ros/humble /usr/bin/cmake --install /home/user/AMR/build/amr_description

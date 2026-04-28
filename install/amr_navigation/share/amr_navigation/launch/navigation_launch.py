@@ -1,0 +1,1 @@
+/home/user/AMR/src/amr_navigation/launch/navigation_launch.py

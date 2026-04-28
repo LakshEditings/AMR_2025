@@ -1,0 +1,24 @@
+[0.007s] Invoking command in '/home/user/AMR/build/amr_gazebo': AMENT_PREFIX_PATH=/home/user/AMR/install/amr_navigation:/home/user/AMR/install/amr_gui:/home/user/AMR/install/amr_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/user/AMR/install/amr_navigation:/home/user/AMR/install/amr_description:/opt/ros/humble PYTHONPATH=/home/user/AMR/build/amr_gui:/home/user/AMR/install/amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake --build /home/user/AMR/build/amr_gazebo -- -j12 -l12
+[0.047s] Invoked command in '/home/user/AMR/build/amr_gazebo' returned '0': AMENT_PREFIX_PATH=/home/user/AMR/install/amr_navigation:/home/user/AMR/install/amr_gui:/home/user/AMR/install/amr_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/user/AMR/install/amr_navigation:/home/user/AMR/install/amr_description:/opt/ros/humble PYTHONPATH=/home/user/AMR/build/amr_gui:/home/user/AMR/install/amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake --build /home/user/AMR/build/amr_gazebo -- -j12 -l12
+[0.049s] Invoking command in '/home/user/AMR/build/amr_gazebo': AMENT_PREFIX_PATH=/home/user/AMR/install/amr_navigation:/home/user/AMR/install/amr_gui:/home/user/AMR/install/amr_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/user/AMR/install/amr_navigation:/home/user/AMR/install/amr_description:/opt/ros/humble PYTHONPATH=/home/user/AMR/build/amr_gui:/home/user/AMR/install/amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake --install /home/user/AMR/build/amr_gazebo
+[0.060s] -- Install configuration: ""
+[0.060s] -- Execute custom install script
+[0.060s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/amr_gazebo//worlds/amr_world.world
+[0.060s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/amr_gazebo//launch/full_system_launch.py
+[0.060s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/amr_gazebo//launch/gazebo_launch.py
+[0.061s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/ament_index/resource_index/package_run_dependencies/amr_gazebo
+[0.061s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/ament_index/resource_index/parent_prefix_path/amr_gazebo
+[0.061s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/amr_gazebo/environment/ament_prefix_path.sh
+[0.061s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/amr_gazebo/environment/ament_prefix_path.dsv
+[0.061s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/amr_gazebo/environment/path.sh
+[0.061s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/amr_gazebo/environment/path.dsv
+[0.061s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/amr_gazebo/local_setup.bash
+[0.061s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/amr_gazebo/local_setup.sh
+[0.061s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/amr_gazebo/local_setup.zsh
+[0.062s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/amr_gazebo/local_setup.dsv
+[0.062s] -- Symlinking: /home/user/AMR/install/amr_gazebo/share/amr_gazebo/package.dsv
+[0.071s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/ament_index/resource_index/packages/amr_gazebo
+[0.072s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/amr_gazebo/cmake/amr_gazeboConfig.cmake
+[0.072s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/amr_gazebo/cmake/amr_gazeboConfig-version.cmake
+[0.072s] -- Up-to-date symlink: /home/user/AMR/install/amr_gazebo/share/amr_gazebo/package.xml
+[0.075s] Invoked command in '/home/user/AMR/build/amr_gazebo' returned '0': AMENT_PREFIX_PATH=/home/user/AMR/install/amr_navigation:/home/user/AMR/install/amr_gui:/home/user/AMR/install/amr_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/user/AMR/install/amr_navigation:/home/user/AMR/install/amr_description:/opt/ros/humble PYTHONPATH=/home/user/AMR/build/amr_gui:/home/user/AMR/install/amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake --install /home/user/AMR/build/amr_gazebo

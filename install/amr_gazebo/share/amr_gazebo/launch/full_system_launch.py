@@ -1,0 +1,1 @@
+/home/user/AMR/src/amr_gazebo/launch/full_system_launch.py

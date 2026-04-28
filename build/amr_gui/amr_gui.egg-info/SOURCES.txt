@@ -1,0 +1,13 @@
+package.xml
+setup.cfg
+setup.py
+amr_gui/__init__.py
+amr_gui/amr_gui_node.py
+amr_gui.egg-info/PKG-INFO
+amr_gui.egg-info/SOURCES.txt
+amr_gui.egg-info/dependency_links.txt
+amr_gui.egg-info/entry_points.txt
+amr_gui.egg-info/requires.txt
+amr_gui.egg-info/top_level.txt
+amr_gui.egg-info/zip-safe
+resource/amr_gui

@@ -1,0 +1,4 @@
+Invoking command in '/home/user/AMR/build/amr_navigation': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/user/AMR/build/amr_navigation -- -j12 -l12
+Invoked command in '/home/user/AMR/build/amr_navigation' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/user/AMR/build/amr_navigation -- -j12 -l12
+Invoking command in '/home/user/AMR/build/amr_navigation': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/user/AMR/build/amr_navigation
+Invoked command in '/home/user/AMR/build/amr_navigation' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/user/AMR/build/amr_navigation

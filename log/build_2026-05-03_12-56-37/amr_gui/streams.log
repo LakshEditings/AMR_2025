@@ -1,0 +1,18 @@
+[0.462s] Invoking command in '/home/user/AMR/build/amr_gui': PYTHONPATH=/home/user/AMR/build/amr_gui/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/user/AMR/install/amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/user/AMR/build/amr_gui/build --no-deps symlink_data
+[0.652s] running develop
+[0.771s] running egg_info
+[0.771s] writing amr_gui.egg-info/PKG-INFO
+[0.771s] writing dependency_links to amr_gui.egg-info/dependency_links.txt
+[0.772s] writing entry points to amr_gui.egg-info/entry_points.txt
+[0.772s] writing requirements to amr_gui.egg-info/requires.txt
+[0.772s] writing top-level names to amr_gui.egg-info/top_level.txt
+[0.773s] reading manifest file 'amr_gui.egg-info/SOURCES.txt'
+[0.773s] writing manifest file 'amr_gui.egg-info/SOURCES.txt'
+[0.774s] running build_ext
+[0.774s] Creating /home/user/AMR/install/amr_gui/lib/python3.10/site-packages/amr-gui.egg-link (link to .)
+[0.775s] Installing amr_gui_node script to /home/user/AMR/install/amr_gui/lib/amr_gui
+[0.775s] Installing amr_web_server script to /home/user/AMR/install/amr_gui/lib/amr_gui
+[0.775s] 
+[0.775s] Installed /home/user/AMR/build/amr_gui
+[0.776s] running symlink_data
+[0.800s] Invoked command in '/home/user/AMR/build/amr_gui' returned '0': PYTHONPATH=/home/user/AMR/build/amr_gui/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/user/AMR/install/amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/user/AMR/build/amr_gui/build --no-deps symlink_data

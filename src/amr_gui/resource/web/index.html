@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMR 3D Live View</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #050510; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        canvas { display: block; }
+        
+        /* Glassmorphism UI overlay */
+        #ui-layer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            background: rgba(20, 20, 40, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s;
+            user-select: none;
+        }
+        #ui-layer:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+        #ui-layer svg {
+            width: 50px;
+            height: 50px;
+            pointer-events: none; /* Let the div handle drag */
+        }
+        
+        #title {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #e94560;
+            font-size: 24px;
+            font-weight: bold;
+            background: rgba(10, 10, 24, 0.7);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #e94560;
+            user-select: none;
+        }
+        #status {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #00ff88;
+            font-family: monospace;
+            font-size: 14px;
+            background: rgba(10, 10, 24, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            user-select: none;
+        }
+    </style>
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+    <div id="title">AMR 3D Live View</div>
+    <div id="status">Connecting to ROS2...</div>
+
+    <!-- The rotation icon the user requested -->
+    <div id="ui-layer" title="Drag to Rotate View">
+        <svg viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round">
+            <!-- Crossing ellipses with dashed pattern -->
+            <ellipse cx="50" cy="50" rx="40" ry="15" stroke-dasharray="4 6" />
+            <ellipse cx="50" cy="50" rx="15" ry="40" stroke-dasharray="4 6" />
+            <!-- Arrows -->
+            <polygon points="85,45 95,50 85,55" fill="#fff" stroke="none" />
+            <polygon points="55,85 50,95 45,85" fill="#fff" stroke="none" />
+        </svg>
+    </div>
+
+    <script>
+        // ─── THREE.JS SETUP ──────────────────────────────────────────────
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x050510, 0.05);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x050510);
+        document.body.appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(5, 10, 5);
+        scene.add(dirLight);
+
+        // Ground Plane (Blue)
+        const planeGeo = new THREE.PlaneGeometry(100, 100);
+        const planeMat = new THREE.MeshStandardMaterial({ color: 0x1a1a6a, roughness: 0.8, metalness: 0.1 });
+        const plane = new THREE.Mesh(planeGeo, planeMat);
+        plane.rotation.x = -Math.PI / 2;
+        scene.add(plane);
+
+        // Grid helper
+        const gridHelper = new THREE.GridHelper(100, 100, 0x444488, 0x222244);
+        gridHelper.position.y = 0.01;
+        scene.add(gridHelper);
+
+        // Robot Model (Simple Red Box representing the AMR)
+        const robotGeo = new THREE.BoxGeometry(0.8, 0.4, 0.6);
+        const robotMat = new THREE.MeshStandardMaterial({ color: 0xe94560, metalness: 0.5 });
+        const robot = new THREE.Mesh(robotGeo, robotMat);
+        robot.position.y = 0.3; // Raised to account for wheels
+        
+        // 4 Wheels
+        const wheelGeo = new THREE.CylinderGeometry(0.15, 0.15, 0.1, 16);
+        const wheelMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.9 });
+        const wheelPositions = [
+            [0.3, -0.2, 0.35],   // Front Left
+            [0.3, -0.2, -0.35],  // Front Right
+            [-0.3, -0.2, 0.35],  // Back Left
+            [-0.3, -0.2, -0.35]  // Back Right
+        ];
+        wheelPositions.forEach(pos => {
+            const wheel = new THREE.Mesh(wheelGeo, wheelMat);
+            wheel.position.set(...pos);
+            wheel.rotation.x = Math.PI / 2;
+            robot.add(wheel);
+        });
+
+        scene.add(robot);
+        
+        // Robot direction indicator (Green Arrow)
+        const dirGeo = new THREE.ConeGeometry(0.1, 0.4, 16);
+        const dirMat = new THREE.MeshBasicMaterial({ color: 0x00ff88 });
+        const dirCone = new THREE.Mesh(dirGeo, dirMat);
+        dirCone.rotation.z = -Math.PI / 2;
+        dirCone.position.set(0.6, 0.1, 0);
+        robot.add(dirCone);
+
+        // LiDAR Points (Particle System)
+        const maxPoints = 2000;
+        const scanGeo = new THREE.BufferGeometry();
+        const scanPos = new Float32Array(maxPoints * 3);
+        const scanColors = new Float32Array(maxPoints * 3);
+        scanGeo.setAttribute('position', new THREE.BufferAttribute(scanPos, 3));
+        scanGeo.setAttribute('color', new THREE.BufferAttribute(scanColors, 3));
+        const scanMat = new THREE.PointsMaterial({ size: 0.1, vertexColors: true, transparent: true, opacity: 0.8 });
+        const scanPoints = new THREE.Points(scanGeo, scanMat);
+        scene.add(scanPoints);
+
+        // Walls (Brown/Orange boundaries)
+        function createWall(x, z, sx, sz) {
+            const geo = new THREE.BoxGeometry(sx, 0.5, sz);
+            const mat = new THREE.MeshStandardMaterial({ color: 0xcc6600 });
+            const m = new THREE.Mesh(geo, mat);
+            m.position.set(x, 0.25, z);
+            scene.add(m);
+        }
+        createWall(0, -2, 8.1, 0.1); // North
+        createWall(0, 2, 8.1, 0.1);  // South
+        createWall(4, 0, 0.1, 4.1);  // East
+        createWall(-4, 0, 0.1, 4.1); // West
+
+        // Obstacles (Yellow)
+        let obstacleMeshes = [];
+
+        // ─── CAMERA ORBIT LOGIC (Icon Drag) ──────────────────────────────
+        let camRadius = 8;
+        let camTheta = Math.PI / 4; // Horizontal angle
+        let camPhi = Math.PI / 3;   // Vertical angle
+        
+        function updateCamera() {
+            // Spherical to Cartesian relative to robot
+            const rx = robot.position.x;
+            const rz = robot.position.z;
+            camera.position.x = rx + camRadius * Math.sin(camPhi) * Math.sin(camTheta);
+            camera.position.y = camRadius * Math.cos(camPhi);
+            camera.position.z = rz + camRadius * Math.sin(camPhi) * Math.cos(camTheta);
+            camera.lookAt(rx, 0, rz);
+        }
+        updateCamera();
+
+        const uiIcon = document.getElementById('ui-layer');
+        let isDragging = false;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+
+        uiIcon.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+        });
+        window.addEventListener('mouseup', () => isDragging = false);
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const dx = e.clientX - lastMouseX;
+            const dy = e.clientY - lastMouseY;
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+
+            // Adjust angles
+            camTheta -= dx * 0.01;
+            camPhi -= dy * 0.01;
+            // Clamp Phi so it doesn't go below ground or over the top
+            camPhi = Math.max(0.1, Math.min(Math.PI / 2.1, camPhi));
+            updateCamera();
+        });
+
+        // Zoom with wheel
+        window.addEventListener('wheel', (e) => {
+            camRadius += e.deltaY * 0.01;
+            camRadius = Math.max(2, Math.min(20, camRadius));
+            updateCamera();
+        });
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // ─── WEBSOCKET LOGIC ──────────────────────────────────────────────
+        const statusEl = document.getElementById('status');
+        let wsGlobal = null;
+        
+        // Keyboard bindings for 3D UI
+        let activeKeys = { w: false, a: false, s: false, d: false, ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
+        function sendVelocity() {
+            if (!wsGlobal || wsGlobal.readyState !== WebSocket.OPEN) return;
+            let linear = 0.0;
+            let angular = 0.0;
+            
+            if (activeKeys['w'] || activeKeys['ArrowUp']) linear = 0.3;
+            if (activeKeys['s'] || activeKeys['ArrowDown']) linear = -0.3;
+            if (activeKeys['a'] || activeKeys['ArrowLeft']) angular = 1.0;
+            if (activeKeys['d'] || activeKeys['ArrowRight']) angular = -1.0;
+            
+            wsGlobal.send(JSON.stringify({
+                type: "cmd_vel",
+                linear: linear,
+                angular: angular
+            }));
+        }
+        window.addEventListener('keydown', (e) => {
+            if (activeKeys.hasOwnProperty(e.key)) {
+                activeKeys[e.key] = true;
+                sendVelocity();
+            }
+        });
+        window.addEventListener('keyup', (e) => {
+            if (activeKeys.hasOwnProperty(e.key)) {
+                activeKeys[e.key] = false;
+                sendVelocity();
+            }
+        });
+
+        function connectWS() {
+            const ws = new WebSocket('ws://localhost:9090');
+            wsGlobal = ws;
+            
+            ws.onopen = () => {
+                statusEl.textContent = "ROS2 Connected (Receiving Odom & Scan)";
+                statusEl.style.color = "#00ff88";
+            };
+            
+            ws.onclose = () => {
+                statusEl.textContent = "Disconnected. Retrying...";
+                statusEl.style.color = "#e94560";
+                setTimeout(connectWS, 2000);
+            };
+
+            ws.onmessage = (event) => {
+                const msg = JSON.parse(event.data);
+                
+                if (msg.type === "odom") {
+                    robot.position.x = msg.data.x;
+                    robot.position.z = -msg.data.y;
+                    // Yaw rotation
+                    robot.rotation.y = msg.data.yaw;
+                    updateCamera(); // Follow robot
+                }
+                else if (msg.type === "obstacles") {
+                    // Remove old obstacles
+                    obstacleMeshes.forEach(m => scene.remove(m));
+                    obstacleMeshes = [];
+                    
+                    const mat = new THREE.MeshStandardMaterial({ color: 0xffff00 });
+                    
+                    msg.data.forEach(obs => {
+                        let geo;
+                        if (obs.shape === "cylinder") {
+                            geo = new THREE.CylinderGeometry(obs.r, obs.r, obs.sz, 32);
+                        } else {
+                            geo = new THREE.BoxGeometry(obs.sx, obs.sz, obs.sy); // Note: Three Y is Up, Gazebo Z is Up
+                        }
+                        const mesh = new THREE.Mesh(geo, mat);
+                        mesh.position.set(obs.x, obs.sz / 2.0, -obs.y);
+                        mesh.rotation.y = obs.yaw;
+                        scene.add(mesh);
+                        obstacleMeshes.push(mesh);
+                    });
+                }
+                else if (msg.type === "scan") {
+                    const data = msg.data;
+                    const r_yaw = robot.rotation.y;
+                    const rx = robot.position.x;
+                    const rz = robot.position.z;
+                    
+                    let ptIdx = 0;
+                    let angle = data.angle_min;
+                    
+                    for (let i = 0; i < data.ranges.length; i++) {
+                        const r = data.ranges[i];
+                        if (r > 0 && r < data.range_max) {
+                            const globalAngle = r_yaw + angle;
+                            // Convert polar to cartesian (Three.js coordinates)
+                            const px = rx + r * Math.cos(globalAngle);
+                            const pz = rz - r * Math.sin(globalAngle);
+                            
+                            scanPos[ptIdx * 3] = px;
+                            scanPos[ptIdx * 3 + 1] = 0.1; // Slightly above ground
+                            scanPos[ptIdx * 3 + 2] = pz;
+                            
+                            // Color mapping (orange to cyan)
+                            const ratio = Math.min(r / data.range_max, 1.0);
+                            scanColors[ptIdx * 3] = 1.0 - ratio * 0.6; // R
+                            scanColors[ptIdx * 3 + 1] = ratio * 0.5;   // G
+                            scanColors[ptIdx * 3 + 2] = ratio;         // B
+                            
+                            ptIdx++;
+                        }
+                        angle += data.angle_inc;
+                    }
+                    
+                    // Clear rest
+                    for (let i = ptIdx; i < maxPoints; i++) {
+                        scanPos[i * 3] = 0;
+                        scanPos[i * 3 + 1] = -10;
+                        scanPos[i * 3 + 2] = 0;
+                    }
+                    
+                    scanGeo.attributes.position.needsUpdate = true;
+                    scanGeo.attributes.color.needsUpdate = true;
+                    scanGeo.setDrawRange(0, ptIdx);
+                }
+            };
+        }
+        
+        connectWS();
+
+        // Render loop
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+</html>

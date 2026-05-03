@@ -10,8 +10,9 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        ('share/' + package_name + '/web', ['resource/web/index.html']),
     ],
-    install_requires=['setuptools'],
+    install_requires=['setuptools', 'websockets'],
     zip_safe=True,
     maintainer='user',
     maintainer_email='user@amr.com',
@@ -20,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'amr_gui_node = amr_gui.amr_gui_node:main',
+            'amr_web_server = amr_gui.amr_web_server:main',
         ],
     },
 )

@@ -29,19 +29,16 @@ def generate_launch_description():
         ]
     )
 
-    # 3. Launch RViz2 for 3D Tracking
-    rviz_config_file = '/opt/ros/humble/share/nav2_bringup/rviz/nav2_default_view.rviz'
-    rviz_node = Node(
-        package='rviz2',
-        executable='rviz2',
-        name='rviz2',
-        arguments=['-d', rviz_config_file],
-        parameters=[{'use_sim_time': True}],
+    # 3. Launch Custom 3D Web UI (Replaces RViz)
+    web_server_node = Node(
+        package='amr_gui',
+        executable='amr_web_server',
+        name='amr_web_server',
         output='screen'
     )
 
     return LaunchDescription([
         gazebo_launch,
         navigation_launch,
-        rviz_node,
+        web_server_node,
     ])

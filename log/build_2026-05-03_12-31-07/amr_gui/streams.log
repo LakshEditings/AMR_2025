@@ -1,0 +1,20 @@
+[0.745s] Invoking command in '/home/user/AMR/build/amr_gui': PYTHONPATH=/home/user/AMR/build/amr_gui/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/user/AMR/install/amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/user/AMR/build/amr_gui/build --no-deps symlink_data
+[0.921s] running develop
+[1.032s] running egg_info
+[1.032s] writing amr_gui.egg-info/PKG-INFO
+[1.032s] writing dependency_links to amr_gui.egg-info/dependency_links.txt
+[1.032s] writing entry points to amr_gui.egg-info/entry_points.txt
+[1.032s] writing requirements to amr_gui.egg-info/requires.txt
+[1.032s] writing top-level names to amr_gui.egg-info/top_level.txt
+[1.033s] reading manifest file 'amr_gui.egg-info/SOURCES.txt'
+[1.034s] writing manifest file 'amr_gui.egg-info/SOURCES.txt'
+[1.035s] running build_ext
+[1.035s] Creating /home/user/AMR/install/amr_gui/lib/python3.10/site-packages/amr-gui.egg-link (link to .)
+[1.036s] Installing amr_gui_node script to /home/user/AMR/install/amr_gui/lib/amr_gui
+[1.036s] Installing amr_web_server script to /home/user/AMR/install/amr_gui/lib/amr_gui
+[1.036s] 
+[1.036s] Installed /home/user/AMR/build/amr_gui
+[1.036s] running symlink_data
+[1.036s] creating /home/user/AMR/install/amr_gui/share/amr_gui/web
+[1.036s] symbolically linking /home/user/AMR/build/amr_gui/resource/web/index.html -> /home/user/AMR/install/amr_gui/share/amr_gui/web
+[1.057s] Invoked command in '/home/user/AMR/build/amr_gui' returned '0': PYTHONPATH=/home/user/AMR/build/amr_gui/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/user/AMR/install/amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/user/AMR/build/amr_gui/build --no-deps symlink_data

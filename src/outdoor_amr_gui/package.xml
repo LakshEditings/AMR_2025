@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>outdoor_amr_gui</name>
+  <version>1.0.0</version>
+  <description>Outdoor AMR GUI: 3D Web View (GPS + LiDAR) and 2D GPS Tracker</description>
+  <maintainer email="user@amr.com">user</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <depend>rclpy</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>std_msgs</depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

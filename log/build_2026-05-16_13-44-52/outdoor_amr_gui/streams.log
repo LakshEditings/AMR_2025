@@ -1,0 +1,18 @@
+[0.630s] Invoking command in '/home/user/AMR/build/outdoor_amr_gui': PYTHONPATH=/home/user/AMR/build/outdoor_amr_gui/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/user/AMR/install/outdoor_amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/user/AMR/build/outdoor_amr_gui/build --no-deps symlink_data
+[0.801s] running develop
+[0.915s] running egg_info
+[0.915s] writing outdoor_amr_gui.egg-info/PKG-INFO
+[0.915s] writing dependency_links to outdoor_amr_gui.egg-info/dependency_links.txt
+[0.915s] writing entry points to outdoor_amr_gui.egg-info/entry_points.txt
+[0.915s] writing requirements to outdoor_amr_gui.egg-info/requires.txt
+[0.915s] writing top-level names to outdoor_amr_gui.egg-info/top_level.txt
+[0.917s] reading manifest file 'outdoor_amr_gui.egg-info/SOURCES.txt'
+[0.917s] writing manifest file 'outdoor_amr_gui.egg-info/SOURCES.txt'
+[0.918s] running build_ext
+[0.918s] Creating /home/user/AMR/install/outdoor_amr_gui/lib/python3.10/site-packages/outdoor-amr-gui.egg-link (link to .)
+[0.919s] Installing outdoor_gui_node script to /home/user/AMR/install/outdoor_amr_gui/lib/outdoor_amr_gui
+[0.919s] Installing outdoor_web_server script to /home/user/AMR/install/outdoor_amr_gui/lib/outdoor_amr_gui
+[0.919s] 
+[0.919s] Installed /home/user/AMR/build/outdoor_amr_gui
+[0.919s] running symlink_data
+[0.944s] Invoked command in '/home/user/AMR/build/outdoor_amr_gui' returned '0': PYTHONPATH=/home/user/AMR/build/outdoor_amr_gui/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/user/AMR/install/outdoor_amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/user/AMR/build/outdoor_amr_gui/build --no-deps symlink_data

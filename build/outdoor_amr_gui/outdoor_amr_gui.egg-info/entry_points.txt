@@ -1,0 +1,4 @@
+[console_scripts]
+outdoor_gui_node = outdoor_amr_gui.outdoor_gui_node:main
+outdoor_web_server = outdoor_amr_gui.outdoor_web_server:main
+

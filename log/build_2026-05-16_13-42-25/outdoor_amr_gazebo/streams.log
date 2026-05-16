@@ -1,0 +1,44 @@
+[0.012s] Invoking command in '/home/user/AMR/build/outdoor_amr_gazebo': AMENT_PREFIX_PATH=/home/user/AMR/install/outdoor_amr_gui:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/opt/ros/humble PATH=/home/user/AMR/install/outdoor_amr_gui/bin:${PATH} PYTHONPATH=/home/user/AMR/build/outdoor_amr_gui:/home/user/AMR/install/outdoor_amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake /home/user/AMR/src/outdoor_amr_gazebo -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/user/AMR/install/outdoor_amr_gazebo
+[0.538s] -- The C compiler identification is GNU 11.4.0
+[1.137s] -- The CXX compiler identification is GNU 11.4.0
+[1.160s] -- Detecting C compiler ABI info
+[1.320s] -- Detecting C compiler ABI info - done
+[1.325s] -- Check for working C compiler: /usr/bin/cc - skipped
+[1.326s] -- Detecting C compile features
+[1.327s] -- Detecting C compile features - done
+[1.332s] -- Detecting CXX compiler ABI info
+[1.447s] -- Detecting CXX compiler ABI info - done
+[1.453s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[1.453s] -- Detecting CXX compile features
+[1.453s] -- Detecting CXX compile features - done
+[1.457s] -- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+[1.598s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter 
+[1.660s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[1.749s] -- Configuring done
+[1.750s] -- Generating done
+[1.751s] -- Build files have been written to: /home/user/AMR/build/outdoor_amr_gazebo
+[1.754s] Invoked command in '/home/user/AMR/build/outdoor_amr_gazebo' returned '0': AMENT_PREFIX_PATH=/home/user/AMR/install/outdoor_amr_gui:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/opt/ros/humble PATH=/home/user/AMR/install/outdoor_amr_gui/bin:${PATH} PYTHONPATH=/home/user/AMR/build/outdoor_amr_gui:/home/user/AMR/install/outdoor_amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake /home/user/AMR/src/outdoor_amr_gazebo -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/user/AMR/install/outdoor_amr_gazebo
+[1.754s] Invoking command in '/home/user/AMR/build/outdoor_amr_gazebo': AMENT_PREFIX_PATH=/home/user/AMR/install/outdoor_amr_gui:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/opt/ros/humble PATH=/home/user/AMR/install/outdoor_amr_gui/bin:${PATH} PYTHONPATH=/home/user/AMR/build/outdoor_amr_gui:/home/user/AMR/install/outdoor_amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake --build /home/user/AMR/build/outdoor_amr_gazebo -- -j12 -l12
+[1.788s] Invoked command in '/home/user/AMR/build/outdoor_amr_gazebo' returned '0': AMENT_PREFIX_PATH=/home/user/AMR/install/outdoor_amr_gui:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/opt/ros/humble PATH=/home/user/AMR/install/outdoor_amr_gui/bin:${PATH} PYTHONPATH=/home/user/AMR/build/outdoor_amr_gui:/home/user/AMR/install/outdoor_amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake --build /home/user/AMR/build/outdoor_amr_gazebo -- -j12 -l12
+[1.790s] Invoking command in '/home/user/AMR/build/outdoor_amr_gazebo': AMENT_PREFIX_PATH=/home/user/AMR/install/outdoor_amr_gui:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/opt/ros/humble PATH=/home/user/AMR/install/outdoor_amr_gui/bin:${PATH} PYTHONPATH=/home/user/AMR/build/outdoor_amr_gui:/home/user/AMR/install/outdoor_amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake --install /home/user/AMR/build/outdoor_amr_gazebo
+[1.798s] -- Install configuration: ""
+[1.799s] -- Execute custom install script
+[1.799s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/outdoor_amr_gazebo/launch/outdoor_gazebo_launch.py
+[1.806s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/outdoor_amr_gazebo/worlds/outdoor_world.world
+[1.816s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/outdoor_amr_gazebo/urdf/outdoor_amr.urdf.xacro
+[1.825s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/ament_index/resource_index/package_run_dependencies/outdoor_amr_gazebo
+[1.834s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/ament_index/resource_index/parent_prefix_path/outdoor_amr_gazebo
+[1.844s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/outdoor_amr_gazebo/environment/ament_prefix_path.sh
+[1.856s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/outdoor_amr_gazebo/environment/ament_prefix_path.dsv
+[1.867s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/outdoor_amr_gazebo/environment/path.sh
+[1.879s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/outdoor_amr_gazebo/environment/path.dsv
+[1.891s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/outdoor_amr_gazebo/local_setup.bash
+[1.902s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/outdoor_amr_gazebo/local_setup.sh
+[1.914s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/outdoor_amr_gazebo/local_setup.zsh
+[1.922s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/outdoor_amr_gazebo/local_setup.dsv
+[1.930s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/outdoor_amr_gazebo/package.dsv
+[1.942s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/ament_index/resource_index/packages/outdoor_amr_gazebo
+[1.952s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/outdoor_amr_gazebo/cmake/outdoor_amr_gazeboConfig.cmake
+[1.961s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/outdoor_amr_gazebo/cmake/outdoor_amr_gazeboConfig-version.cmake
+[1.969s] -- Symlinking: /home/user/AMR/install/outdoor_amr_gazebo/share/outdoor_amr_gazebo/package.xml
+[2.010s] Invoked command in '/home/user/AMR/build/outdoor_amr_gazebo' returned '0': AMENT_PREFIX_PATH=/home/user/AMR/install/outdoor_amr_gui:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/opt/ros/humble PATH=/home/user/AMR/install/outdoor_amr_gui/bin:${PATH} PYTHONPATH=/home/user/AMR/build/outdoor_amr_gui:/home/user/AMR/install/outdoor_amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake --install /home/user/AMR/build/outdoor_amr_gazebo

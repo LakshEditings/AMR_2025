@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Outdoor AMR — 3D Live View</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { overflow:hidden; background:#050f05; font-family:'Segoe UI',sans-serif; }
+    canvas { display:block; }
+
+    /* Orbit Icon */
+    #orbit-btn {
+      position:absolute; top:20px; right:20px;
+      width:72px; height:72px;
+      background:rgba(0,30,10,0.65);
+      backdrop-filter:blur(10px);
+      border:1px solid rgba(0,230,118,0.25);
+      border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      cursor:grab; user-select:none;
+      box-shadow:0 4px 20px rgba(0,0,0,0.6);
+      transition:transform .15s;
+    }
+    #orbit-btn:active { cursor:grabbing; transform:scale(.93); }
+    #orbit-btn svg { width:44px; height:44px; pointer-events:none; }
+
+    /* Title */
+    #title {
+      position:absolute; top:20px; left:20px;
+      color:#00e676; font-size:22px; font-weight:700;
+      background:rgba(0,10,0,.75);
+      padding:9px 18px; border-radius:8px;
+      border-left:4px solid #00e676;
+      user-select:none;
+    }
+
+    /* GPS HUD */
+    #gps-hud {
+      position:absolute; top:80px; left:20px;
+      background:rgba(0,10,0,.75);
+      border:1px solid rgba(0,230,118,.25);
+      border-radius:8px; padding:10px 16px;
+      color:#00e676; font-family:monospace; font-size:13px;
+      line-height:1.7; user-select:none; min-width:220px;
+    }
+    #gps-hud span { color:#aaffcc; }
+
+    /* Status bar */
+    #status {
+      position:absolute; bottom:20px; left:20px;
+      color:#00ff88; font-family:monospace; font-size:13px;
+      background:rgba(0,10,0,.75);
+      padding:8px 14px; border-radius:6px;
+    }
+
+    /* Controls hint */
+    #controls-hint {
+      position:absolute; bottom:20px; right:20px;
+      color:#558855; font-family:monospace; font-size:11px;
+      background:rgba(0,10,0,.55);
+      padding:6px 12px; border-radius:6px; text-align:right;
+      user-select:none;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+<div id="title">🛰 Outdoor AMR — 3D Live View</div>
+
+<div id="gps-hud">
+  GPS: <span id="gps-status" style="color:#ff4444">NO FIX</span><br>
+  Lat: <span id="gps-lat">--</span><br>
+  Lon: <span id="gps-lon">--</span><br>
+  Alt: <span id="gps-alt">--</span> m
+</div>
+
+<div id="orbit-btn" title="Drag to Rotate | Scroll to Zoom">
+  <svg viewBox="0 0 100 100" fill="none" stroke="#00e676" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="50" cy="50" rx="40" ry="15" stroke-dasharray="5 7"/>
+    <ellipse cx="50" cy="50" rx="15" ry="40" stroke-dasharray="5 7"/>
+    <polygon points="87,46 97,50 87,54" fill="#00e676" stroke="none"/>
+    <polygon points="54,87 50,97 46,87" fill="#00e676" stroke="none"/>
+  </svg>
+</div>
+
+<div id="status">Connecting to ROS2…</div>
+<div id="controls-hint">W/S — Forward/Back<br>A/D — Turn<br>Scroll — Zoom<br>Drag Icon — Rotate View</div>
+
+<script>
+// ─── THREE.JS SETUP ────────────────────────────────────────────────────────
+const scene    = new THREE.Scene();
+scene.fog      = new THREE.FogExp2(0x050f05, 0.018);
+
+const camera   = new THREE.PerspectiveCamera(50, innerWidth/innerHeight, 0.1, 2000);
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(devicePixelRatio);
+renderer.setClearColor(0x050f05);
+renderer.shadowMap.enabled = true;
+document.body.appendChild(renderer.domElement);
+
+// Lighting
+scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+const sun = new THREE.DirectionalLight(0xfff4cc, 1.0);
+sun.position.set(30, 60, 30);
+sun.castShadow = true;
+scene.add(sun);
+const hemi = new THREE.HemisphereLight(0x87ceeb, 0x1a5c1a, 0.4);
+scene.add(hemi);
+
+// ─── GROUND (Grass green) ─────────────────────────────────────────────────
+const groundGeo = new THREE.PlaneGeometry(400, 400, 64, 64);
+const groundMat = new THREE.MeshStandardMaterial({ color:0x2d5a1b, roughness:0.9, metalness:0.0 });
+const ground    = new THREE.Mesh(groundGeo, groundMat);
+ground.rotation.x = -Math.PI/2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// Grid overlay
+const grid = new THREE.GridHelper(400, 80, 0x1a3a0a, 0x0e240a);
+grid.position.y = 0.02;
+scene.add(grid);
+
+// ─── ARENA BOUNDARY WALLS ─────────────────────────────────────────────────
+function makeWall(px, pz, sx, sz, h=3) {
+  const g = new THREE.BoxGeometry(sx, h, sz);
+  const m = new THREE.MeshStandardMaterial({ color:0x888888, roughness:0.8 });
+  const mesh = new THREE.Mesh(g, m);
+  mesh.position.set(px, h/2, pz);
+  mesh.castShadow = true;
+  scene.add(mesh);
+}
+makeWall(0,   -20, 40, 0.3);
+makeWall(0,    20, 40, 0.3);
+makeWall(-20,   0, 0.3, 40);
+makeWall( 20,   0, 0.3, 40);
+
+// ─── TREES ────────────────────────────────────────────────────────────────
+function makeTree(x, z, r=0.3, h=5) {
+  const trunk = new THREE.Mesh(
+    new THREE.CylinderGeometry(r, r*1.2, h, 10),
+    new THREE.MeshStandardMaterial({ color:0x5c3d1e })
+  );
+  trunk.position.set(x, h/2, z);
+  trunk.castShadow = true;
+  scene.add(trunk);
+  const foliage = new THREE.Mesh(
+    new THREE.SphereGeometry(r*4, 8, 6),
+    new THREE.MeshStandardMaterial({ color:0x1e6b1e })
+  );
+  foliage.position.set(x, h + r*2.5, z);
+  foliage.castShadow = true;
+  scene.add(foliage);
+}
+makeTree( 8,  6);
+makeTree(-7, 10, 0.3, 5);
+makeTree( 5, -8, 0.25, 4);
+makeTree(-12,-5, 0.35, 6);
+
+// ─── BUILDING ─────────────────────────────────────────────────────────────
+const bldg = new THREE.Mesh(
+  new THREE.BoxGeometry(6, 5, 4),
+  new THREE.MeshStandardMaterial({ color:0x8a8a8a })
+);
+bldg.position.set(-10, 2.5, -8);
+bldg.castShadow = true;
+scene.add(bldg);
+
+// ─── OUTDOOR AMR — OFF-ROAD BUGGY ─────────────────────────────────────────
+const robotGroup = new THREE.Group();
+const darkMetal = new THREE.MeshStandardMaterial({ color:0x333333, metalness:0.6, roughness:0.4 });
+const greenPaint = new THREE.MeshStandardMaterial({ color:0x1b5e20, metalness:0.3, roughness:0.4 });
+const chromeMat = new THREE.MeshStandardMaterial({ color:0xaaaaaa, metalness:0.8, roughness:0.2 });
+
+// Main chassis (lower body)
+const chassisLower = new THREE.Mesh(
+  new THREE.BoxGeometry(0.90, 0.10, 0.55), greenPaint
+);
+chassisLower.position.y = 0.18;
+robotGroup.add(chassisLower);
+
+// Chassis skid plate (undercarriage protector)
+const skidPlate = new THREE.Mesh(
+  new THREE.BoxGeometry(0.70, 0.04, 0.45), darkMetal
+);
+skidPlate.position.y = 0.11;
+robotGroup.add(skidPlate);
+
+// Roll-cage uprights (4 posts)
+const cageMat = new THREE.MeshStandardMaterial({ color:0x222222, metalness:0.7, roughness:0.3 });
+const cageGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.30, 8);
+[[ 0.28, 0.38, 0.22], [ 0.28, 0.38,-0.22],
+ [-0.28, 0.38, 0.22], [-0.28, 0.38,-0.22]].forEach(([x,y,z]) => {
+  const post = new THREE.Mesh(cageGeo, cageMat);
+  post.position.set(x, y, z);
+  robotGroup.add(post);
+});
+
+// Roll-cage top bars (longitudinal)
+const barGeoL = new THREE.CylinderGeometry(0.012, 0.012, 0.56, 8);
+barGeoL.rotateZ(Math.PI/2);
+[0.22, -0.22].forEach(z => {
+  const bar = new THREE.Mesh(barGeoL, cageMat);
+  bar.position.set(0, 0.53, z);
+  robotGroup.add(bar);
+});
+
+// Roll-cage top bars (lateral)
+const barGeoW = new THREE.CylinderGeometry(0.012, 0.012, 0.44, 8);
+barGeoW.rotateX(Math.PI/2);
+[0.28, -0.28].forEach(x => {
+  const bar = new THREE.Mesh(barGeoW, cageMat);
+  bar.position.set(x, 0.53, 0);
+  robotGroup.add(bar);
+});
+
+// Front bumper guard
+const bumperGeo = new THREE.TorusGeometry(0.08, 0.02, 6, 12, Math.PI);
+const bumper = new THREE.Mesh(bumperGeo, chromeMat);
+bumper.rotation.x = Math.PI/2;
+bumper.rotation.z = Math.PI/2;
+bumper.position.set(0.48, 0.18, 0);
+robotGroup.add(bumper);
+
+// Front bumper bar
+const fBumper = new THREE.Mesh(
+  new THREE.BoxGeometry(0.04, 0.06, 0.50), chromeMat
+);
+fBumper.position.set(0.47, 0.18, 0);
+robotGroup.add(fBumper);
+
+// Rear plate
+const rearPlate = new THREE.Mesh(
+  new THREE.BoxGeometry(0.04, 0.12, 0.50), darkMetal
+);
+rearPlate.position.set(-0.45, 0.22, 0);
+robotGroup.add(rearPlate);
+
+// 3D LiDAR dome (on roof center)
+const lidarBase = new THREE.Mesh(
+  new THREE.CylinderGeometry(0.07, 0.08, 0.06, 16), darkMetal
+);
+lidarBase.position.set(0, 0.56, 0);
+robotGroup.add(lidarBase);
+const lidarDome = new THREE.Mesh(
+  new THREE.SphereGeometry(0.06, 16, 8, 0, Math.PI*2, 0, Math.PI/2),
+  new THREE.MeshStandardMaterial({ color:0xcc0000, metalness:0.4 })
+);
+lidarDome.position.set(0, 0.59, 0);
+robotGroup.add(lidarDome);
+
+// Spinning LiDAR ring indicator
+const lidarRing = new THREE.Mesh(
+  new THREE.TorusGeometry(0.065, 0.008, 6, 24),
+  new THREE.MeshBasicMaterial({ color:0xff3333 })
+);
+lidarRing.rotation.x = Math.PI/2;
+lidarRing.position.set(0, 0.57, 0);
+robotGroup.add(lidarRing);
+
+// GPS antenna (white box on front-right of roof)
+const gpsAntenna = new THREE.Mesh(
+  new THREE.BoxGeometry(0.07, 0.025, 0.07),
+  new THREE.MeshStandardMaterial({ color:0xeeeeee, metalness:0.2 })
+);
+gpsAntenna.position.set(0.18, 0.55, -0.12);
+robotGroup.add(gpsAntenna);
+// GPS antenna mast
+const gpsMast = new THREE.Mesh(
+  new THREE.CylinderGeometry(0.008, 0.008, 0.10, 6), chromeMat
+);
+gpsMast.position.set(0.18, 0.50, -0.12);
+robotGroup.add(gpsMast);
+
+// Direction arrow (green cone pointing forward)
+const dirCone = new THREE.Mesh(
+  new THREE.ConeGeometry(0.05, 0.20, 12),
+  new THREE.MeshBasicMaterial({ color:0x00ff88 })
+);
+dirCone.rotation.z = -Math.PI/2;
+dirCone.position.set(0.58, 0.18, 0);
+robotGroup.add(dirCone);
+
+// 4 Chunky off-road wheels (big torus + cylinder hub)
+const bigWheelGeo = new THREE.CylinderGeometry(0.14, 0.14, 0.10, 20);
+const tireMat = new THREE.MeshStandardMaterial({ color:0x1a1a1a, roughness:0.95 });
+const hubGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.11, 12);
+const hubMat = new THREE.MeshStandardMaterial({ color:0x444444, metalness:0.7 });
+
+[[ 0.32, 0.04, 0.33],  // Front-Left
+ [ 0.32, 0.04,-0.33],  // Front-Right
+ [-0.32, 0.04, 0.33],  // Rear-Left
+ [-0.32, 0.04,-0.33]   // Rear-Right
+].forEach(([x,y,z]) => {
+  const tire = new THREE.Mesh(bigWheelGeo, tireMat);
+  tire.rotation.x = Math.PI/2;
+  tire.position.set(x, y, z);
+  robotGroup.add(tire);
+  const hub = new THREE.Mesh(hubGeo, hubMat);
+  hub.rotation.x = Math.PI/2;
+  hub.position.set(x, y, z);
+  robotGroup.add(hub);
+});
+
+scene.add(robotGroup);
+
+// ─── LIDAR POINT CLOUD ────────────────────────────────────────────────────
+const MAX_PTS  = 4000;
+const ptGeo    = new THREE.BufferGeometry();
+const ptPos    = new Float32Array(MAX_PTS * 3);
+const ptColBuf = new Float32Array(MAX_PTS * 3);
+ptGeo.setAttribute('position', new THREE.BufferAttribute(ptPos, 3));
+ptGeo.setAttribute('color',    new THREE.BufferAttribute(ptColBuf, 3));
+const ptMat  = new THREE.PointsMaterial({ size:0.15, vertexColors:true, transparent:true, opacity:0.85 });
+const ptCloud = new THREE.Points(ptGeo, ptMat);
+scene.add(ptCloud);
+
+// ─── DYNAMIC OBSTACLES ────────────────────────────────────────────────────
+let obsMeshes = [];
+
+// ─── CAMERA ORBIT ─────────────────────────────────────────────────────────
+let camR=14, camTheta=Math.PI/4, camPhi=Math.PI/3.5;
+function updateCamera() {
+  const rx = robotGroup.position.x, rz = robotGroup.position.z;
+  camera.position.set(
+    rx + camR * Math.sin(camPhi)*Math.sin(camTheta),
+    camR * Math.cos(camPhi),
+    rz + camR * Math.sin(camPhi)*Math.cos(camTheta)
+  );
+  camera.lookAt(rx, 0.3, rz);
+}
+updateCamera();
+
+const orbitBtn = document.getElementById('orbit-btn');
+let dragging=false, lastMX=0, lastMY=0;
+orbitBtn.addEventListener('mousedown', e => { dragging=true; lastMX=e.clientX; lastMY=e.clientY; });
+window.addEventListener('mouseup',   () => dragging=false);
+window.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  camTheta -= (e.clientX-lastMX)*0.012;
+  camPhi   -= (e.clientY-lastMY)*0.012;
+  camPhi    = Math.max(0.08, Math.min(Math.PI/2.05, camPhi));
+  lastMX=e.clientX; lastMY=e.clientY;
+  updateCamera();
+});
+window.addEventListener('wheel', e => {
+  camR = Math.max(3, Math.min(80, camR + e.deltaY*0.02));
+  updateCamera();
+});
+window.addEventListener('resize', () => {
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+// ─── WEBSOCKET + KEYBOARD ─────────────────────────────────────────────────
+const statusEl    = document.getElementById('status');
+const gpsStatus   = document.getElementById('gps-status');
+const gpsLatEl    = document.getElementById('gps-lat');
+const gpsLonEl    = document.getElementById('gps-lon');
+const gpsAltEl    = document.getElementById('gps-alt');
+
+let wsConn = null;
+const activeKeys = {w:0,a:0,s:0,d:0,ArrowUp:0,ArrowDown:0,ArrowLeft:0,ArrowRight:0};
+
+function sendVel() {
+  if (!wsConn || wsConn.readyState!==WebSocket.OPEN) return;
+  let lin=0, ang=0;
+  if (activeKeys.w||activeKeys.ArrowUp)    lin  =  0.5;
+  if (activeKeys.s||activeKeys.ArrowDown)  lin  = -0.5;
+  if (activeKeys.a||activeKeys.ArrowLeft)  ang  =  1.2;
+  if (activeKeys.d||activeKeys.ArrowRight) ang  = -1.2;
+  wsConn.send(JSON.stringify({type:'cmd_vel', linear:lin, angular:ang}));
+}
+window.addEventListener('keydown', e => {
+  if (e.key in activeKeys) { activeKeys[e.key]=1; sendVel(); }
+});
+window.addEventListener('keyup', e => {
+  if (e.key in activeKeys) { activeKeys[e.key]=0; sendVel(); }
+});
+
+// GPS trail (3D breadcrumb)
+const gpsTrailPts = [];
+const MAX_TRAIL   = 3000;
+const trailGeo    = new THREE.BufferGeometry();
+const trailPos    = new Float32Array(MAX_TRAIL*3);
+trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPos, 3));
+const trailMat  = new THREE.LineBasicMaterial({ color:0x00e676, linewidth:2 });
+const trailLine = new THREE.Line(trailGeo, trailMat);
+scene.add(trailLine);
+
+function connectWS() {
+  const ws = new WebSocket('ws://localhost:9091');
+  wsConn = ws;
+
+  ws.onopen = () => {
+    statusEl.textContent = 'ROS2 Connected ✓  (Outdoor AMR)';
+    statusEl.style.color = '#00ff88';
+  };
+  ws.onclose = () => {
+    statusEl.textContent = 'Disconnected — Retrying…';
+    statusEl.style.color = '#ff4444';
+    wsConn = null;
+    setTimeout(connectWS, 2000);
+  };
+
+  ws.onmessage = evt => {
+    const msg = JSON.parse(evt.data);
+
+    if (msg.type === 'odom') {
+      robotGroup.position.x =  msg.data.x;
+      robotGroup.position.z = -msg.data.y;
+      robotGroup.position.y = 0;
+      robotGroup.rotation.y = msg.data.yaw;
+      // Add to GPS trail
+      if (gpsTrailPts.length < MAX_TRAIL) {
+        const idx = gpsTrailPts.length;
+        trailPos[idx*3]   =  msg.data.x;
+        trailPos[idx*3+1] = 0.05;
+        trailPos[idx*3+2] = -msg.data.y;
+        gpsTrailPts.push(1);
+        trailGeo.setDrawRange(0, gpsTrailPts.length);
+        trailGeo.attributes.position.needsUpdate = true;
+      }
+      updateCamera();
+    }
+
+    else if (msg.type === 'gps') {
+      const d = msg.data;
+      if (d.fix) {
+        gpsStatus.textContent = 'FIX ACQUIRED ✓';
+        gpsStatus.style.color = '#00ff88';
+      } else {
+        gpsStatus.textContent = 'SEARCHING…';
+        gpsStatus.style.color = '#ff9800';
+      }
+      gpsLatEl.textContent = d.lat.toFixed(6) + '°';
+      gpsLonEl.textContent = d.lon.toFixed(6) + '°';
+      gpsAltEl.textContent = d.alt.toFixed(1);
+    }
+
+    else if (msg.type === 'scan') {
+      const d = msg.data;
+      const rx = robotGroup.position.x, rz = robotGroup.position.z;
+      const ry = robotGroup.rotation.y;
+      let idx = 0, angle = d.angle_min;
+      for (let i=0; i<d.ranges.length; i++) {
+        const r = d.ranges[i];
+        if (r>0 && r<d.range_max) {
+          const ga = ry + angle;
+          ptPos[idx*3]   = rx + r*Math.cos(ga);
+          ptPos[idx*3+1] = 0.3;
+          ptPos[idx*3+2] = rz - r*Math.sin(ga);
+          const t = Math.min(r/d.range_max, 1.0);
+          ptColBuf[idx*3]   = 1.0 - t*0.5;   // orange→green
+          ptColBuf[idx*3+1] = 0.6 + t*0.4;
+          ptColBuf[idx*3+2] = 0.1;
+          idx++;
+        }
+        angle += d.angle_inc;
+      }
+      for (let i=idx; i<MAX_PTS; i++) { ptPos[i*3+1]=-10; }
+      ptGeo.attributes.position.needsUpdate = true;
+      ptGeo.attributes.color.needsUpdate    = true;
+      ptGeo.setDrawRange(0, idx);
+    }
+
+    else if (msg.type === 'obstacles') {
+      obsMeshes.forEach(m => scene.remove(m));
+      obsMeshes = [];
+      const mat = new THREE.MeshStandardMaterial({ color:0xffff00 });
+      msg.data.forEach(obs => {
+        let geo = obs.shape==='cylinder'
+          ? new THREE.CylinderGeometry(obs.r, obs.r, obs.sz, 24)
+          : new THREE.BoxGeometry(obs.sx, obs.sz, obs.sy);
+        const m = new THREE.Mesh(geo, mat);
+        m.position.set(obs.x, obs.sz/2, -obs.y);
+        m.rotation.y = obs.yaw;
+        m.castShadow = true;
+        scene.add(m);
+        obsMeshes.push(m);
+      });
+    }
+  };
+}
+connectWS();
+
+// ─── RENDER LOOP ──────────────────────────────────────────────────────────
+(function animate() {
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+})();
+</script>
+</body>
+</html>

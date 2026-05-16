@@ -1,0 +1,15 @@
+package.xml
+setup.cfg
+setup.py
+outdoor_amr_gui/__init__.py
+outdoor_amr_gui/outdoor_gui_node.py
+outdoor_amr_gui/outdoor_web_server.py
+outdoor_amr_gui.egg-info/PKG-INFO
+outdoor_amr_gui.egg-info/SOURCES.txt
+outdoor_amr_gui.egg-info/dependency_links.txt
+outdoor_amr_gui.egg-info/entry_points.txt
+outdoor_amr_gui.egg-info/requires.txt
+outdoor_amr_gui.egg-info/top_level.txt
+outdoor_amr_gui.egg-info/zip-safe
+resource/outdoor_amr_gui
+resource/web/index.html

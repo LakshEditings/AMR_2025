@@ -1,0 +1,1 @@
+/home/user/AMR/build/outdoor_amr_gazebo/ament_cmake_core/outdoor_amr_gazeboConfig.cmake

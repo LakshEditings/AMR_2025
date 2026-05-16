@@ -1,0 +1,25 @@
+running develop
+running egg_info
+creating outdoor_amr_gui.egg-info
+writing outdoor_amr_gui.egg-info/PKG-INFO
+writing dependency_links to outdoor_amr_gui.egg-info/dependency_links.txt
+writing entry points to outdoor_amr_gui.egg-info/entry_points.txt
+writing requirements to outdoor_amr_gui.egg-info/requires.txt
+writing top-level names to outdoor_amr_gui.egg-info/top_level.txt
+writing manifest file 'outdoor_amr_gui.egg-info/SOURCES.txt'
+reading manifest file 'outdoor_amr_gui.egg-info/SOURCES.txt'
+writing manifest file 'outdoor_amr_gui.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/user/AMR/install/outdoor_amr_gui/lib/python3.10/site-packages/outdoor-amr-gui.egg-link (link to .)
+Installing outdoor_gui_node script to /home/user/AMR/install/outdoor_amr_gui/bin
+Installing outdoor_web_server script to /home/user/AMR/install/outdoor_amr_gui/bin
+
+Installed /home/user/AMR/build/outdoor_amr_gui
+running symlink_data
+creating /home/user/AMR/install/outdoor_amr_gui/share/ament_index
+creating /home/user/AMR/install/outdoor_amr_gui/share/ament_index/resource_index
+creating /home/user/AMR/install/outdoor_amr_gui/share/ament_index/resource_index/packages
+symbolically linking /home/user/AMR/build/outdoor_amr_gui/resource/outdoor_amr_gui -> /home/user/AMR/install/outdoor_amr_gui/share/ament_index/resource_index/packages
+symbolically linking /home/user/AMR/build/outdoor_amr_gui/package.xml -> /home/user/AMR/install/outdoor_amr_gui/share/outdoor_amr_gui
+creating /home/user/AMR/install/outdoor_amr_gui/share/outdoor_amr_gui/web
+symbolically linking /home/user/AMR/build/outdoor_amr_gui/resource/web/index.html -> /home/user/AMR/install/outdoor_amr_gui/share/outdoor_amr_gui/web

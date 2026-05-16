@@ -1,0 +1,4 @@
+source;share/outdoor_amr_gazebo/local_setup.bash
+source;share/outdoor_amr_gazebo/local_setup.dsv
+source;share/outdoor_amr_gazebo/local_setup.sh
+source;share/outdoor_amr_gazebo/local_setup.zsh

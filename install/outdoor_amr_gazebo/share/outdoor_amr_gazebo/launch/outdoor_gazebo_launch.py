@@ -1,0 +1,1 @@
+/home/user/AMR/src/outdoor_amr_gazebo/launch/outdoor_gazebo_launch.py

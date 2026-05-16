@@ -1,0 +1,27 @@
+[0.851s] Invoking command in '/home/user/AMR/build/outdoor_amr_gui': PYTHONPATH=/home/user/AMR/build/outdoor_amr_gui/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/user/AMR/install/outdoor_amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/user/AMR/build/outdoor_amr_gui/build --no-deps symlink_data
+[1.061s] running develop
+[1.178s] running egg_info
+[1.178s] creating outdoor_amr_gui.egg-info
+[1.178s] writing outdoor_amr_gui.egg-info/PKG-INFO
+[1.178s] writing dependency_links to outdoor_amr_gui.egg-info/dependency_links.txt
+[1.178s] writing entry points to outdoor_amr_gui.egg-info/entry_points.txt
+[1.178s] writing requirements to outdoor_amr_gui.egg-info/requires.txt
+[1.178s] writing top-level names to outdoor_amr_gui.egg-info/top_level.txt
+[1.178s] writing manifest file 'outdoor_amr_gui.egg-info/SOURCES.txt'
+[1.179s] reading manifest file 'outdoor_amr_gui.egg-info/SOURCES.txt'
+[1.179s] writing manifest file 'outdoor_amr_gui.egg-info/SOURCES.txt'
+[1.260s] running build_ext
+[1.260s] Creating /home/user/AMR/install/outdoor_amr_gui/lib/python3.10/site-packages/outdoor-amr-gui.egg-link (link to .)
+[1.262s] Installing outdoor_gui_node script to /home/user/AMR/install/outdoor_amr_gui/bin
+[1.262s] Installing outdoor_web_server script to /home/user/AMR/install/outdoor_amr_gui/bin
+[1.263s] 
+[1.263s] Installed /home/user/AMR/build/outdoor_amr_gui
+[1.263s] running symlink_data
+[1.263s] creating /home/user/AMR/install/outdoor_amr_gui/share/ament_index
+[1.263s] creating /home/user/AMR/install/outdoor_amr_gui/share/ament_index/resource_index
+[1.263s] creating /home/user/AMR/install/outdoor_amr_gui/share/ament_index/resource_index/packages
+[1.263s] symbolically linking /home/user/AMR/build/outdoor_amr_gui/resource/outdoor_amr_gui -> /home/user/AMR/install/outdoor_amr_gui/share/ament_index/resource_index/packages
+[1.263s] symbolically linking /home/user/AMR/build/outdoor_amr_gui/package.xml -> /home/user/AMR/install/outdoor_amr_gui/share/outdoor_amr_gui
+[1.263s] creating /home/user/AMR/install/outdoor_amr_gui/share/outdoor_amr_gui/web
+[1.263s] symbolically linking /home/user/AMR/build/outdoor_amr_gui/resource/web/index.html -> /home/user/AMR/install/outdoor_amr_gui/share/outdoor_amr_gui/web
+[1.316s] Invoked command in '/home/user/AMR/build/outdoor_amr_gui' returned '0': PYTHONPATH=/home/user/AMR/build/outdoor_amr_gui/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/user/AMR/install/outdoor_amr_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/user/AMR/build/outdoor_amr_gui/build --no-deps symlink_data

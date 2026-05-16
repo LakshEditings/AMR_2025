@@ -1,0 +1,35 @@
+[0.000000] (-) TimerEvent: {}
+[0.000355] (-) JobUnselected: {'identifier': 'amr_description'}
+[0.000387] (-) JobUnselected: {'identifier': 'amr_gazebo'}
+[0.000397] (-) JobUnselected: {'identifier': 'amr_gui'}
+[0.000406] (-) JobUnselected: {'identifier': 'amr_navigation'}
+[0.000413] (-) JobUnselected: {'identifier': 'outdoor_amr_gazebo'}
+[0.000422] (outdoor_amr_gui) JobQueued: {'identifier': 'outdoor_amr_gui', 'dependencies': OrderedDict()}
+[0.000432] (outdoor_amr_gui) JobStarted: {'identifier': 'outdoor_amr_gui'}
+[0.099696] (-) TimerEvent: {}
+[0.199869] (-) TimerEvent: {}
+[0.300038] (-) TimerEvent: {}
+[0.400209] (-) TimerEvent: {}
+[0.405172] (outdoor_amr_gui) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/home/user/AMR/build/outdoor_amr_gui/build', '--no-deps', 'symlink_data'], 'cwd': '/home/user/AMR/build/outdoor_amr_gui', 'env': {'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'VSCODE_CWD': '/home/user', 'LANGUAGE': 'en_IN:en', 'USER': 'user', 'VSCODE_NLS_CONFIG': '{"userLocale":"en-gb","osLocale":"en-in","resolvedLanguage":"en","defaultMessagesFile":"/usr/share/antigravity/resources/app/out/nls.messages.json","locale":"en-gb","availableLanguages":{}}', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '0', 'LD_LIBRARY_PATH': '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/home/user', 'CHROME_DESKTOP': 'antigravity.desktop', 'DESKTOP_SESSION': 'ubuntu', 'VSCODE_IPC_HOOK': '/run/user/1000/vscode-6f134cb2-1.10-main.sock', 'GIO_LAUNCHED_DESKTOP_FILE': '/usr/share/applications/antigravity.desktop', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'PAGER': 'cat', 'MANAGERPID': '1736', 'SYSTEMD_EXEC_PID': '1956', 'IM_CONFIG_CHECK_ENV': '1', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'ANTIGRAVITY_AGENT': '1', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '4168', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'ROS_DISTRO': 'humble', 'LOGNAME': 'user', 'JOURNAL_STREAM': '8:17121', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'user', 'TERM': 'dumb', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'FC_FONTATIONS': '1', 'ROS_LOCALHOST_ONLY': '0', 'ANTIGRAVITY_EDITOR_APP_ROOT': '/usr/share/antigravity/resources/app', 'PATH': '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/user-LOQ-15IAX9:@/tmp/.ICE-unix/1931,unix/user-LOQ-15IAX9:/tmp/.ICE-unix/1931', 'INVOCATION_ID': '5dab7280f1874eda9085380886213082', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'GDK_BACKEND': 'wayland', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.9A7GP3', 'SSH_AGENT_LAUNCHER': 'gnome-keyring', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'GJS_DEBUG_OUTPUT': 'stderr', 'QT_IM_MODULE': 'ibus', 'ANTIGRAVITY_TRAJECTORY_ID': 'b23797fe-142d-4235-8fc9-42cd774ce5bb', 'PWD': '/home/user/AMR/build/outdoor_amr_gui', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'VSCODE_CODE_CACHE_PATH': '/home/user/.config/Antigravity/CachedData/15487b3041e65228cae24980a3f796c905ef582c', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/user/AMR/build/outdoor_amr_gui/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/user/AMR/install/outdoor_amr_gui/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1', 'VSCODE_PID': '4168'}, 'shell': False}
+[0.500316] (-) TimerEvent: {}
+[0.572783] (outdoor_amr_gui) StdoutLine: {'line': b'running develop\n'}
+[0.600431] (-) TimerEvent: {}
+[0.682535] (outdoor_amr_gui) StdoutLine: {'line': b'running egg_info\n'}
+[0.682649] (outdoor_amr_gui) StdoutLine: {'line': b'writing outdoor_amr_gui.egg-info/PKG-INFO\n'}
+[0.682786] (outdoor_amr_gui) StdoutLine: {'line': b'writing dependency_links to outdoor_amr_gui.egg-info/dependency_links.txt\n'}
+[0.682821] (outdoor_amr_gui) StdoutLine: {'line': b'writing entry points to outdoor_amr_gui.egg-info/entry_points.txt\n'}
+[0.682885] (outdoor_amr_gui) StdoutLine: {'line': b'writing requirements to outdoor_amr_gui.egg-info/requires.txt\n'}
+[0.682916] (outdoor_amr_gui) StdoutLine: {'line': b'writing top-level names to outdoor_amr_gui.egg-info/top_level.txt\n'}
+[0.684045] (outdoor_amr_gui) StdoutLine: {'line': b"reading manifest file 'outdoor_amr_gui.egg-info/SOURCES.txt'\n"}
+[0.684434] (outdoor_amr_gui) StdoutLine: {'line': b"writing manifest file 'outdoor_amr_gui.egg-info/SOURCES.txt'\n"}
+[0.685258] (outdoor_amr_gui) StdoutLine: {'line': b'running build_ext\n'}
+[0.685370] (outdoor_amr_gui) StdoutLine: {'line': b'Creating /home/user/AMR/install/outdoor_amr_gui/lib/python3.10/site-packages/outdoor-amr-gui.egg-link (link to .)\n'}
+[0.685862] (outdoor_amr_gui) StdoutLine: {'line': b'Installing outdoor_gui_node script to /home/user/AMR/install/outdoor_amr_gui/lib/outdoor_amr_gui\n'}
+[0.685954] (outdoor_amr_gui) StdoutLine: {'line': b'Installing outdoor_web_server script to /home/user/AMR/install/outdoor_amr_gui/lib/outdoor_amr_gui\n'}
+[0.686050] (outdoor_amr_gui) StdoutLine: {'line': b'\n'}
+[0.686088] (outdoor_amr_gui) StdoutLine: {'line': b'Installed /home/user/AMR/build/outdoor_amr_gui\n'}
+[0.686144] (outdoor_amr_gui) StdoutLine: {'line': b'running symlink_data\n'}
+[0.700517] (-) TimerEvent: {}
+[0.705000] (outdoor_amr_gui) CommandEnded: {'returncode': 0}
+[0.713809] (outdoor_amr_gui) JobEnded: {'identifier': 'outdoor_amr_gui', 'rc': 0}
+[0.714115] (-) EventReactorShutdown: {}

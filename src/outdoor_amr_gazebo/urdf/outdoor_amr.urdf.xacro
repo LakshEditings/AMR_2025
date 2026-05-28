@@ -2,9 +2,9 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="outdoor_amr">
 
   <!-- ==================== PROPERTIES ==================== -->
-  <xacro:property name="chassis_length" value="0.60"/>
-  <xacro:property name="chassis_width"  value="0.40"/>
-  <xacro:property name="chassis_height" value="0.15"/>
+  <xacro:property name="chassis_length" value="0.90"/>
+  <xacro:property name="chassis_width"  value="0.55"/>
+  <xacro:property name="chassis_height" value="0.20"/>
   <xacro:property name="chassis_mass"   value="20.0"/>
 
   <xacro:property name="wheel_radius"   value="0.12"/>

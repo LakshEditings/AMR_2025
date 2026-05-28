@@ -94,6 +94,14 @@ class AMRGuiNode(Node):
         self.angular_speed = 1.0
         self.current_obstacles = []
 
+        # ── Waypoints ────────────────────────────────────────────────────────
+        self.markers = {'home': None, 'end': None, 'checkpoints': []}
+        self.current_tool = None
+        self.nav_active = False
+        self.nav_state = 'idle'
+        self.nav_target = None
+        self.current_chk_idx = 0
+
         # ── Build GUI ────────────────────────────────────────────────────────
         self.root = tk.Tk()
         self.root.title("AMR Navigator — Live 2D View")
@@ -198,6 +206,28 @@ class AMRGuiNode(Node):
         self.btn_rev.grid(row=2, column=1, padx=2, pady=2, sticky="nsew")
         for i in range(3): btn_box.columnconfigure(i, weight=1); btn_box.rowconfigure(i, weight=1)
 
+        # ── Waypoints ───────────────────────────────────────────────────────
+        wp = tk.Frame(right, bg=BG_PANEL)
+        wp.pack(fill=tk.X, padx=8, pady=4)
+        tk.Label(wp, text="Waypoints (Drag / Click)", font=label_font, fg=ACCENT, bg=BG_PANEL).pack(anchor="w")
+
+        tools_frame = tk.Frame(wp, bg=BG_PANEL)
+        tools_frame.pack(fill=tk.X, pady=2)
+        
+        self.btn_home = tk.Button(tools_frame, text="🏠 Home\n(Click)", font=label_font, bg=ACCENT2, fg=WHITE, cursor="hand2", command=lambda: self._toggle_tool('home'), bd=0)
+        self.btn_home.pack(side=tk.LEFT, expand=True, fill=tk.X, padx=2)
+        
+        self.btn_end = tk.Button(tools_frame, text="🚩 End\n(Click)", font=label_font, bg=ACCENT2, fg=WHITE, cursor="hand2", command=lambda: self._toggle_tool('end'), bd=0)
+        self.btn_end.pack(side=tk.LEFT, expand=True, fill=tk.X, padx=2)
+        
+        self.btn_chk = tk.Button(tools_frame, text="🏁 ChkPt\n(Click)", font=label_font, bg=ACCENT2, fg=WHITE, cursor="hand2", command=lambda: self._toggle_tool('checkpoint'), bd=0)
+        self.btn_chk.pack(side=tk.LEFT, expand=True, fill=tk.X, padx=2)
+
+        self.btn_pickup = tk.Button(tools_frame, text="📦 PICKUP\n(Auto)", font=label_font, bg="#e67e22", fg=WHITE, cursor="hand2", command=self._start_pickup, bd=0)
+        self.btn_pickup.pack(side=tk.LEFT, expand=True, fill=tk.X, padx=2)
+
+        self.canvas.bind("<Button-1>", self._on_canvas_click)
+
         # Bindings
         self.btn_fwd.bind("<ButtonPress-1>", lambda e: self._vel(1,  0)); self.btn_fwd.bind("<ButtonRelease-1>", lambda e: self._vel(0,  0))
         self.btn_rev.bind("<ButtonPress-1>", lambda e: self._vel(-1, 0)); self.btn_rev.bind("<ButtonRelease-1>", lambda e: self._vel(0,  0))
@@ -209,6 +239,134 @@ class AMRGuiNode(Node):
             self.root.bind(f"<KeyPress-{key}>",   lambda e, l=lin, ag=ang: self._vel(l, ag))
             self.root.bind(f"<KeyRelease-{key}>", lambda e: self._vel(0, 0))
         self.root.bind("<space>", lambda e: self._vel(0, 0))
+
+    # ── Interactive Waypoints ───────────────────────────────────────────────
+    def _toggle_tool(self, tool_name):
+        # Reset all buttons
+        self.btn_home.config(bg=ACCENT2, fg=WHITE)
+        self.btn_end.config(bg=ACCENT2, fg=WHITE)
+        self.btn_chk.config(bg=ACCENT2, fg=WHITE)
+
+        if self.current_tool == tool_name:
+            self.current_tool = None
+        else:
+            self.current_tool = tool_name
+            if tool_name == 'home': self.btn_home.config(bg=WHITE, fg="black")
+            elif tool_name == 'end': self.btn_end.config(bg="#ff4444", fg=WHITE)
+            elif tool_name == 'checkpoint': self.btn_chk.config(bg=GREEN, fg="black")
+
+    def _on_canvas_click(self, event):
+        if self.current_tool:
+            self._place_marker(self.current_tool, event.x, event.y)
+            if self.current_tool in ['home', 'end']:
+                self._toggle_tool(self.current_tool) # Deselect once placed
+
+    def _place_marker(self, mtype, cx, cy):
+        w, h = self.canvas.winfo_width(), self.canvas.winfo_height()
+        ppm = min(w, h) / 10.0
+        wx = self.robot_x + (cx - w / 2.0) / ppm
+        wy = self.robot_y - (cy - h / 2.0) / ppm
+        
+        if mtype == 'home':
+            self.markers['home'] = (wx, wy)
+        elif mtype == 'end':
+            self.markers['end'] = (wx, wy)
+        elif mtype == 'checkpoint':
+            self.markers['checkpoints'].append((wx, wy))
+
+    def _start_pickup(self):
+        if not self.markers['home'] or not self.markers['end']:
+            messagebox.showwarning("Missing Waypoints", "Please set at least Home 🏠 and End 🚩 locations first!")
+            return
+        
+        self.nav_active = True
+        self.nav_state = 'home'
+        self.current_chk_idx = 0
+        self._set_current_target()
+        self.btn_pickup.config(bg=GREEN, fg="black", text="🚚 EN ROUTE")
+
+    def _set_current_target(self):
+        if self.nav_state == 'home' and self.markers['home']:
+            self.nav_target = self.markers['home']
+        elif self.nav_state == 'checkpoints' and self.markers['checkpoints'] and self.current_chk_idx < len(self.markers['checkpoints']):
+            self.nav_target = self.markers['checkpoints'][self.current_chk_idx]
+        elif self.nav_state == 'end' and self.markers['end']:
+            self.nav_target = self.markers['end']
+        else:
+            self._next_nav_target()
+
+    def _next_nav_target(self):
+        if self.nav_state == 'home':
+            self.nav_state = 'checkpoints'
+            self.current_chk_idx = 0
+        elif self.nav_state == 'checkpoints':
+            self.current_chk_idx += 1
+            if self.current_chk_idx >= len(self.markers['checkpoints']):
+                self.nav_state = 'end'
+        elif self.nav_state == 'end':
+            self.nav_state = 'idle'
+            self.nav_active = False
+            self.nav_target = None
+            msg = Twist()
+            self.cmd_vel_pub.publish(msg)
+            self.btn_pickup.config(bg="#e67e22", fg=WHITE, text="📦 PICKUP\n(Auto)")
+            messagebox.showinfo("Mission Complete", "Robot has reached the End Flag! 🚩")
+            return
+        self._set_current_target()
+
+    def _navigation_step(self):
+        if not self.nav_active or not self.nav_target:
+            return
+
+        tx, ty = self.nav_target
+        dx = tx - self.robot_x
+        dy = ty - self.robot_y
+        dist = math.hypot(dx, dy)
+        
+        if dist < 0.5:
+            self._next_nav_target()
+            return
+
+        target_yaw = math.atan2(dy, dx)
+        yaw_error = target_yaw - self.robot_yaw
+        yaw_error = math.atan2(math.sin(yaw_error), math.cos(yaw_error))
+        
+        v = 0.0
+        w = 0.0
+        if self.latest_scan:
+            scan = self.latest_scan
+            front_ranges, left_ranges, right_ranges = [], [], []
+            angle = scan.angle_min
+            for r in scan.ranges:
+                if scan.range_min < r < scan.range_max:
+                    if -0.6 < angle < 0.6:
+                        front_ranges.append(r)
+                    elif 0.6 <= angle < 1.2:
+                        left_ranges.append(r)
+                    elif -1.2 < angle <= -0.6:
+                        right_ranges.append(r)
+                angle += scan.angle_increment
+            
+            min_front = min(front_ranges) if front_ranges else 10.0
+            min_left = min(left_ranges) if left_ranges else 10.0
+            min_right = min(right_ranges) if right_ranges else 10.0
+            
+            if min_front < 1.2:
+                # Obstacle ahead, turn away
+                w = 1.2 if min_left > min_right else -1.2
+                v = 0.05  # slight forward motion to not get stuck
+            else:
+                if abs(yaw_error) > 0.3:
+                    w = 1.0 if yaw_error > 0 else -1.0
+                    v = 0.1
+                else:
+                    w = yaw_error * 1.5
+                    v = self.linear_speed
+
+        msg = Twist()
+        msg.linear.x = float(v)
+        msg.angular.z = float(w)
+        self.cmd_vel_pub.publish(msg)
 
     # ─────────────────────────────────────────────────────────────────────────
     # Map Spawner Logic
@@ -306,6 +464,8 @@ class AMRGuiNode(Node):
     # Rendering
     # ─────────────────────────────────────────────────────────────────────────
     def _render(self):
+        if self.nav_active:
+            self._navigation_step()
         self._draw_main_canvas()
         self._update_labels()
         self.root.after(50, self._render)
@@ -361,6 +521,26 @@ class AMRGuiNode(Node):
             (cx + sz * 0.6 * math.cos(yaw - 2.4), cy - sz * 0.6 * math.sin(yaw - 2.4)),
         ], fill=GREEN, outline="#009944", width=2)
         
+        # Draw Waypoints
+        for mtype, pos in [('home', self.markers.get('home')), ('end', self.markers.get('end'))]:
+            if pos:
+                wx, wy = pos
+                sx = cx + (wx - self.robot_x) * ppm
+                sy = cy - (wy - self.robot_y) * ppm
+                if mtype == 'home':
+                    c.create_rectangle(sx-10, sy-10, sx+10, sy+10, fill="white", outline="black", width=2)
+                    c.create_text(sx, sy, text="H", fill="black", font=("Helvetica", 10, "bold"))
+                else:
+                    c.create_rectangle(sx-10, sy-10, sx+10, sy+10, fill="#ff4444", outline="black", width=2)
+                    c.create_text(sx, sy, text="E", fill="white", font=("Helvetica", 10, "bold"))
+                
+        for i, pos in enumerate(self.markers.get('checkpoints', [])):
+            wx, wy = pos
+            sx = cx + (wx - self.robot_x) * ppm
+            sy = cy - (wy - self.robot_y) * ppm
+            c.create_text(sx, sy, text="🏁", font=("Helvetica", 16))
+            c.create_text(sx+12, sy-12, text=str(i+1), fill=WHITE, font=("Helvetica", 9, "bold"))
+
         self._draw_minimap(c, w, h, valid_pts)
 
     def _draw_minimap(self, c, W, H, valid_pts):
